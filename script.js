@@ -1,72 +1,48 @@
-document.addEventListener("DOMContentLoaded", (event) => {
-  const currentYear = new Date().getFullYear();
-  document.getElementById("currentYear").textContent = currentYear;
-});
+document.addEventListener("DOMContentLoaded", () => {
+  // Set the current year
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
 
-window.onscroll = function () {
-  scrollFunction();
-};
-
-function scrollFunction() {
-  const backToTopButton = document.getElementById("backToTop");
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    backToTopButton.style.display = "block";
-  } else {
-    backToTopButton.style.display = "none";
-  }
-}
-
-document.getElementById("backToTop").addEventListener("click", function () {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".navbar a").forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute("href")).scrollIntoView({
-        behavior: "smooth",
-      });
-    });
-  });
-
-  // Back to Top button
+  // Back to Top button functionality
   const backToTopButton = document.getElementById("backToTop");
 
-  backToTopButton.addEventListener("click", function () {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  });
-});
+  const scrollFunction = () => {
+    if (window.scrollY > 20) {
+      backToTopButton.style.display = "block";
+    } else {
+      backToTopButton.style.display = "none";
+    }
+  };
 
-document.addEventListener("DOMContentLoaded", function () {
-  function smoothScroll(target) {
+  window.addEventListener("scroll", scrollFunction);
+
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Smooth scrolling for navbar links
+  const smoothScroll = (target) => {
     const navbarHeight = document.querySelector(".navbar").offsetHeight;
     const targetPosition =
       document.querySelector(target).offsetTop - navbarHeight;
+    window.scrollTo({ top: targetPosition, behavior: "smooth" });
+  };
 
-    window.scrollTo({
-      top: targetPosition,
-      behavior: "smooth",
-    });
-  }
-
-  document.querySelectorAll(".navbar-nav .nav-link").forEach(function (link) {
-    link.addEventListener("click", function (e) {
+  document.querySelectorAll(".navbar-nav .nav-link").forEach((link) => {
+    link.addEventListener("click", (e) => {
       e.preventDefault();
-      const target = this.getAttribute("href");
+      const target = e.target.getAttribute("href");
       smoothScroll(target);
     });
   });
 
-  const backToTopButton = document.querySelector(".back-to-top");
-  if (backToTopButton) {
-    backToTopButton.addEventListener("click", function (e) {
-      e.preventDefault();
-      smoothScroll("body");
+  // Close navbar on small screens when a link is clicked
+  document.querySelectorAll(".navbar-nav .nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      const navbarToggler = document.querySelector(".navbar-toggler");
+      const navbarCollapse = document.querySelector(".navbar-collapse");
+      if (navbarCollapse.classList.contains("show")) {
+        navbarToggler.click();
+      }
     });
-  }
+  });
 });
